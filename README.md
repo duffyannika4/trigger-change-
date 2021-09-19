@@ -1,0 +1,2 @@
+# trigger-change-
+#include &lt;IE.au3> #include &lt;MsgBoxConstants.au3>  Local $strMainURL = "http://bidfta.bidqt.com/BidFTA/#/Main"  Local $oIE = _IECreate($strMainURL)  MsgBox(0,"pause","Press ok when page is ready")  Local $oSelect = _IEGetObjByName($oIE, "LocationSelect")  ;ControlSend("Main - Internet Explorer","","","e")  _IEFormElementOptionSelect($oSelect,"Amelia, OH",1,"byText")  Local $jQuery = _jQuerify($oIE) $jQuery("[name='LocationSelect']").trigger('change')  MsgBox(0,"Done","Done")  _IEQuit($oIE)
