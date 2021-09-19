@@ -1,0 +1,58 @@
+#include <IE.au3>
+#include <MsgBoxConstants.au3>
+
+Local $strMainURL = "http://bidfta.bidqt.com/BidFTA/#/Main"
+
+Local $oIE = _IECreate($strMainURL)
+
+MsgBox(0,"pause","Press ok when page is ready")
+
+Local $oSelect = _IEGetObjByName($oIE, "LocationSelect")
+
+;ControlSend("Main - Internet Explorer","","","e")
+
+_IEFormElementOptionSelect($oSelect,"Amelia, OH",1,"byText")
+
+Local $jQuery = _jQuerify($oIE)
+$jQuery("[name='LocationSelect']").trigger('change')
+
+MsgBox(0,"Done","Done")
+
+_IEQuit($oIE)
+
+
+
+; #FUNCTION# ====================================================================================================================
+; Name ..........: _jQuerify
+; Description ...:
+; Syntax ........: _jQuerify(Byref $oIE)
+; Parameters ....: $oIE                 - Object variable of an InternetExplorer.Application.
+; Return values .: an object variable pointing to the jQuery library
+; Author ........: Chimp
+; Modified ......:
+; Remarks .......:
+; Related .......:
+; Link ..........:
+; Example .......:
+; ===============================================================================================================================
+Func _jQuerify(ByRef $oIE)
+
+    Local $msie, $jsEval, $jQuery, $otherlib = False
+
+    $msie = Execute('$oIE.document.documentMode')
+
+    If ($msie = "") Or Number($msie) < 11 Then ; an IE version < 11
+        ; create a reference to the javascript eval() function
+        $oIE.document.parentWindow.setTimeout('window.eval = eval', 0)
+        Do
+            Sleep(250)
+            $jsEval = Execute('$oIE.Document.parentwindow.eval')
+        Until IsObj($jsEval)
+
+    Else ; IE version > = 11
+        ; create a reference to the javascript eval() function
+        $oIE.document.parentWindow.setTimeout('document.head.eval = eval', 0)
+        Do
+            Sleep(250)
+            $jsEval = Execute('$oIE.Document.head.eval')
+        Until IsObj($jsEval)
